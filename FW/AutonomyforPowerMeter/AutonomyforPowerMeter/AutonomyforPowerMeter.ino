@@ -4,24 +4,19 @@
 #include <TimeLib.h>
 #include <virtuabotixRTC.h>
 #include <math.h>
-//RTC_DS3231 rtc;/
-// Creation of the Real Time Clock Object
+
 const int amplitude = 100;  // Amplitude of the sine wave
 const int frequency = 1;    // Frequency of the sine wave
 const int offset = 127;     // Offset to center the wave around 0
-
 const int chipSelect = 10;
-virtuabotixRTC *p_obj;
+virtuabotixRTC *p_obj;  // Creation of the Real Time Clock Object
+
 void setup() {
   Serial.begin(9600);
   p_obj=new virtuabotixRTC(6, 7, 4);
-p_obj->setDS1302Time(18, 10, 10, 7, 12, 6, 2023);
-  if (!SD.begin(chipSelect)) {
-    Serial.println("SD card initialization failed!");
-    return;
-  }
-
+  p_obj->setDS1302Time(18, 10, 10, 7, 12, 6, 2023);
   Serial.println("Initializing SD card...");
+
   if (SD.begin(chipSelect)) {
     Serial.println("SD card initialized!");
   } else {
@@ -31,16 +26,11 @@ p_obj->setDS1302Time(18, 10, 10, 7, 12, 6, 2023);
 }
 
 void loop() {
- int x = random(50,150); // Generate a random angle between 0 and 359
-  int y = random(0,50);
  // Convert the angle to radians
 // Calculate the sine value
-  p_obj->updateTime();
-
   static int angle = 0;
   int sineValue = amplitude * sin(angle * 0.0174533) + offset;
   angle += frequency;
-
   p_obj->updateTime();
  String data = "Value: "+ String(angle)+"V " +String(sineValue)+"mA\nData to be stored on SD card at: " + String(p_obj->year) + "-" + String(p_obj->month) + "-" + String(p_obj->dayofmonth) + " " + String(p_obj->hours) + ":" + String(p_obj->minutes) + ":" + String(p_obj->seconds);
   File dataFile = SD.open("data.txt", FILE_WRITE);
