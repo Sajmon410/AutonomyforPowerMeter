@@ -8,7 +8,6 @@ Na arudino su od eksternih modula prikaceni jedan RT clock DS1302 i Arduino Micr
 ```C++
 #include <SPI.h>
 #include <SD.h>
-#include <Wire.h>
 #include <virtuabotixRTC.h>
 #include <math.h>
 ```
